@@ -20,7 +20,7 @@ public class Receptor {
                 ms.getLocalPort());
         InetAddress multicastIP = InetAddress.getByName("225.7.8.9");
         InetSocketAddress grupo = new InetSocketAddress(multicastIP, 55555);
-        NetworkInterface interfaceRede = NetworkInterface.getByName("enp3s0");
+        NetworkInterface interfaceRede = NetworkInterface.getByName("wlp0s20f3");
         ms.joinGroup(grupo, interfaceRede);
         /*
          * Agora o MS está configurado e pronto para receber pacotes

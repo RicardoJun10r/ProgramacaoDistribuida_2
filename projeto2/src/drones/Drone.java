@@ -9,11 +9,12 @@ import server.grupoAberto.Emissor;
 import java.io.IOException;
 import java.util.Arrays;
 
+import java.util.Random;
+
 public class Drone {
     public static void main(String[] args) throws IOException {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
         Emissor emissor = new Emissor(55554, "225.7.8.9", "DRONE");
-
         Runnable dados = () -> {
             double[] elementos = coletarElementos();
             System.out.println("Elementos climáticos atual: " + Arrays.toString(elementos));
@@ -37,9 +38,12 @@ public class Drone {
     }
 
     private static double[] coletarElementos() {
+        Random random = new Random();
         double[] elementos = new double[4];
-        for (int i = 0; i < 4; i++)
-            elementos[i] = Math.random() * 10;
+        elementos[0] = 950 + (1050 - 950) * random.nextDouble();
+        elementos[1] = 100 + (1000 - 100) * random.nextDouble();
+        elementos[2] = -10 + (40 + 10) * random.nextDouble();
+        elementos[3] = 0 + (100 - 0) * random.nextDouble();
         return elementos;
     }
 }

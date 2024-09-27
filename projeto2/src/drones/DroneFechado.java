@@ -52,6 +52,12 @@ public class DroneFechado {
         };
 
         scheduler.scheduleAtFixedRate(enviarMensagem, 0, 5, TimeUnit.SECONDS);
+
+        scheduler.schedule(() -> {
+            scheduler.shutdown();
+            System.out.println("Encerrando o serviço de " +
+                    "monitoramento de elementos climáticos.");
+        }, 30, TimeUnit.SECONDS);
     }
 
     private String gerarDadosClimaticos() {
@@ -62,7 +68,5 @@ public class DroneFechado {
         return String.format("Pressão: %.2f hPa, Radiação: %.2f W/m², Temperatura: %.2f ºC, Umidade: %.2f%%", 
                              pressaoAtmosferica, radiacaoSolar, temperatura, umidade);
     }
-
-    
 
 }

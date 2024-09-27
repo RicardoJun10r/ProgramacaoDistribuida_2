@@ -27,10 +27,8 @@ public class EmissorUsuario {
             System.out.println("Processo [Emissor] executando: [" + InetAddress.getLocalHost() + ":"
                     + this.socket.getLocalPort() + "]");
 
-            // Executor para enviar requisições periodicamente
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-            // Tarefa para enviar requisições ao servidor
             Runnable enviarRequisicao = () -> {
                 try {
                     byte[] buffer_envio = (this.NICKNAME + ";" + InetAddress.getLocalHost() + ":" + this.socket.getLocalPort()).getBytes();
@@ -42,10 +40,8 @@ public class EmissorUsuario {
                 }
             };
 
-            // Agendar o envio de requisições a cada 5 segundos
             scheduler.scheduleAtFixedRate(enviarRequisicao, 0, 5, TimeUnit.SECONDS);
 
-            // Receber respostas do servidor
             byte[] buffer_recepcao = new byte[1024];
             while (true) {
                 DatagramPacket packetRecepcao = new DatagramPacket(buffer_recepcao, buffer_recepcao.length);
@@ -53,7 +49,6 @@ public class EmissorUsuario {
                 String line = new String(packetRecepcao.getData(), 0, packetRecepcao.getLength());
                 System.out.println("Resposta recebida: " + line);
 
-                // Encerrar se o servidor enviar a mensagem "sair"
                 if (line.contains("sair")) {
                     System.out.println("Finalizando comunicação.");
                     scheduler.shutdown();

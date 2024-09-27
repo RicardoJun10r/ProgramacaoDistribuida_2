@@ -24,7 +24,7 @@ public class Receptor {
 
         NetworkInterface interfaceRede = null;
 
-        ms.joinGroup(grupo, interfaceRede);
+        ms.joinGroup(grupo, null);
         System.out.println("Receptor entrou no grupo endereçado por " + grupo);
 
         boolean flag = true;
@@ -32,7 +32,6 @@ public class Receptor {
         DatagramPacket pacoteRecepcao;
         String line;
         BlockingQueue<String> fila = new LinkedBlockingQueue<>();
-        // HashMap para armazenar IP e porta dos clientes
         HashMap<InetAddress, Integer> usuarios = new HashMap<>();
 
         while (flag) {
@@ -44,24 +43,19 @@ public class Receptor {
             line = new String(bufferRecepcao, 0, pacoteRecepcao.getLength());
             System.out.println("DEBUG: " + line);
             
-            // Verifica se a mensagem é de um drone
             if (line.contains("DRONE")) {
                 System.out.println(line.substring(5));
-                fila.add(line.substring(5));  // Armazena os dados climáticos recebidos do drone
+                fila.add(line.substring(5));
             } 
-            // Verifica se a mensagem é de um usuário
             else if (line.contains("USUARIO")) {
-                // Adiciona o usuário ao HashMap se não estiver presente
                 if (!usuarios.containsKey(pacoteRecepcao.getAddress())) {
                     usuarios.put(pacoteRecepcao.getAddress(), pacoteRecepcao.getPort());
                 }
 
-                // Verifica se há dados na fila para enviar
                 if (!fila.isEmpty()) {
-                    String mensagemParaUsuario = fila.take();  // Obtém o primeiro dado, mas não remove da fila
+                    String mensagemParaUsuario = fila.take();
                     byte[] bufferEnvio = mensagemParaUsuario.getBytes();
 
-                    // Obtém o IP e porta do usuário que solicitou
                     InetAddress ipUsuario = pacoteRecepcao.getAddress();
                     int portaUsuario = usuarios.get(ipUsuario);
 
